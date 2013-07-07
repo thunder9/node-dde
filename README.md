@@ -1,7 +1,7 @@
 Node-dde
 ========
 
-Node-dde is a simplified regacy win32 Dynamic Data Exchange (DDE) wrapper for node.js using [Edge.js](https://github.com/tjanczuk/edge) and [NDde](http://ndde.codeplex.com/). The client listen to the asynchronous **advice** on multi-threaded CLR without blocking the node.js event loop.
+Node-dde is a simplified regacy win32 Dynamic Data Exchange (DDE) wrapper for node.js using [Edge.js](https://github.com/tjanczuk/edge) and [NDde](http://ndde.codeplex.com/). The client listen to the asynchronous *advise* on multi-threaded CLR without blocking the node.js event loop.
 
 # Installation
 
@@ -21,7 +21,7 @@ npm install
 
 ## Client
 
-Example to listen to the asynchronous advice from a single service-topic-item source is the following:
+Example to listen to the asynchronous advise from a single service-topic-item source is the following:
 
 ```javascript
 var dde = require('node-dde');
@@ -41,7 +41,7 @@ client.connect();
 client.startAdvise('myitem');
 ```
 
-Example to listen to the asynchronous advice from multiple service-topic-item sources is the following:
+Example to listen to the asynchronous advise from multiple service-topic-item sources is the following:
 
 ```javascript
 var dde = require('node-dde');
@@ -68,7 +68,7 @@ clients.startAdvise();
 
 ## Server
 
-Example to push the asynchronous advice to the client is the following:
+Example to push the asynchronous advise to the client is the following:
 
 ```javascript
 var dde = require('node-dde');
