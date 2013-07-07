@@ -31,7 +31,7 @@ function Server(service) {
         callback(null, result);
       },
       OnStopAdvise: function(o) {
-        self.emit('start advise', o.service, o.topic, o.item);
+        self.emit('stop advise', o.service, o.topic, o.item);
         self.onStopAdvise(o.service, o.topic, o.item);
       },
       OnExecute: function(o, callback) {
