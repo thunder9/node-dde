@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace NodeDde
 {
@@ -17,6 +18,10 @@ namespace NodeDde
         {
             var services = (IDictionary<string, object>)input["services"];
             var callbacks = (IDictionary<string, object>)input["callbacks"];
+            var encoding = input.ContainsKey("encoding")
+                ? Encoding.GetEncoding((string)input["encoding"]) : null;
+            var decode = encoding == null
+                ? (Func<object, string>)((s) => (string)s) : (s) => HttpUtility.UrlDecode((string)s, encoding);
 
             var clients = new List<DdeClient>();
             foreach (string service in services.Keys)
@@ -24,7 +29,7 @@ namespace NodeDde
                 var topics = (IDictionary<string, object>)services[service];
                 foreach (string topic in topics.Keys)
                 {
-                    DdeClient client = new DdeClient(service, topic);
+                    DdeClient client = new DdeClient(decode(service), decode(topic));
                     clients.Add(client);
                 }
             }
@@ -78,7 +83,7 @@ namespace NodeDde
                     string item = null;
                     if (opts.ContainsKey("item"))
                     {
-                        item = (string)opts["item"];
+                        item = decode((string)opts["item"]);
                         ((IDictionary<string, object>)services[client.Service])[client.Topic] = new[] { item };
                     }
                     switch (method)
@@ -174,7 +179,7 @@ namespace NodeDde
                                 var items = (object[])topics[client.Topic];
                                 foreach (string item in items)
                                 {
-                                    client.Poke(item, data, timeout);
+                                    client.Poke(decode(item), data, timeout);
                                 }
                             }
                             break;
@@ -182,7 +187,7 @@ namespace NodeDde
                             foreach (DdeClient client in clients)
                             {
                                 var topics = (IDictionary<string, object>)services[client.Service];
-                                var items = (object[])topics[client.Topic];
+                                var items = ((object[])topics[client.Topic]).Select(decode);
                                 foreach (string item in items)
                                 {
                                     var result = client.Request(item, format, timeout);
@@ -199,7 +204,7 @@ namespace NodeDde
                             foreach (DdeClient client in clients)
                             {
                                 var topics = (IDictionary<string, object>)services[client.Service];
-                                var items = (object[])topics[client.Topic];
+                                var items = ((object[])topics[client.Topic]).Select(decode);
                                 foreach (string item in items)
                                 {
                                     client.StartAdvise(item, format, hot, timeout);
@@ -210,7 +215,7 @@ namespace NodeDde
                             foreach (DdeClient client in clients)
                             {
                                 var topics = (IDictionary<string, object>)services[client.Service];
-                                var items = (object[])topics[client.Topic];
+                                var items = ((object[])topics[client.Topic]).Select(decode);;
                                 foreach (string item in items)
                                 {
                                     client.StopAdvise(item, timeout);

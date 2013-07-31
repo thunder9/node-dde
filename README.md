@@ -104,7 +104,7 @@ server.register();
 
 // Client
 
-client = dde.createClient(service, topic)
+client = dde.createClient(service, topic, encoding)
 client.connect()
 client.disconnect()
 client.pause()
@@ -127,7 +127,7 @@ client.isPaused()
 
 // Clients
 
-clients = dde.createClients(services)
+clients = dde.createClients(services, encoding)
 clients.connect()
 clients.disconnect()
 clients.pause()
@@ -208,6 +208,10 @@ server.onPoke = function(service, topic, item, data, format) {};
 server.onRequest = function(service, topic, item, format) { return ''; };
 server.onAdvise = function(topic, item, format) { return ''; };
 ```
+
+# Multi-byte string support
+
+To specify a service / topic / item names that contain multi-byte charactors, you can pass a URL-encoded string as an argument of client methods. Decoding will be done when an [encoding name](http://msdn.microsoft.com/en-us/library/vstudio/System.Text.Encoding.aspx) is passed to `createClients` and `createClient` functions.
 
 # License
 

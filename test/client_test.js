@@ -53,9 +53,9 @@ var id = setInterval(function() { console.log('v8 thread-' + i++)}, 1000);
   clients = dde.createClients({
     myapp: {
       mytopic1: ['myitem1', 'myitem2'],
-      mytopic2: ['myitem1', 'myitem2']
+      mytopic2: ['myitem1', '%82%DC%82%A2%82%A0%82%A2%82%C4%82%DE%82Q']
     }
-  });
+  }, 'shift_jis');
   console.log(clients.service());
   console.log(clients.topic());
   console.log(clients.isConnected());
