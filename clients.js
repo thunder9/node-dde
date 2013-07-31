@@ -21,7 +21,6 @@ function Clients(services, encoding) {
     }
   }
   if (encoding) opts.encoding = encoding;
-  console.log(opts);
   this._invoke = getInvoker(opts, true);
   this.command = this.data = '';
   this.format = 1;
