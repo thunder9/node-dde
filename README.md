@@ -66,6 +66,22 @@ clients.connect();
 clients.startAdvise();
 ```
 
+Example of sending an asynchronous advise to the browser in realtime using [Socket.IO](https://github.com/learnboost/socket.io) is the following:
+
+```javascript
+var io = require('socket.io').listen(80);
+
+var dde = require('node-dde').createClient('myapp', 'mytopic');
+
+dde.on('advise', function(service, topic, item, text) {
+  io.sockets.emit('advise', { item: item, text: text });
+});
+
+dde.connect();
+
+dde.startAdvise('myitem');
+```
+
 ## Server
 
 Example to push the asynchronous advise to the client is the following:
@@ -211,7 +227,7 @@ server.onAdvise = function(topic, item, format) { return ''; };
 
 # Multi-byte string support
 
-To specify a service / topic / item names that contain multi-byte charactors, you can pass a URL-encoded string as an argument of client methods. Decoding will be done when an [encoding name](http://msdn.microsoft.com/en-us/library/vstudio/System.Text.Encoding.aspx) is passed to `createClients` and `createClient` functions.
+To specify a service / topic / item names that contain multi-byte charactors, you can pass a URL-encoded string as an argument to client methods. Decoding will be done when an [encoding name](http://msdn.microsoft.com/en-us/library/vstudio/System.Text.Encoding.aspx) is passed to `createClient` or `createClients` functions.
 
 # License
 
