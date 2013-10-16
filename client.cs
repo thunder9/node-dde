@@ -76,6 +76,7 @@ namespace NodeDde
 
                 var results = new List<IDictionary<string, object>>();
 
+				bool singleItem = false;
                 if (clients.Count == 1)
                 {
                     var client = clients.First();
@@ -84,73 +85,89 @@ namespace NodeDde
                     if (opts.ContainsKey("item"))
                     {
                         item = decode((string)opts["item"]);
-                        ((IDictionary<string, object>)services[client.Service])[client.Topic] = new[] { item };
+						if(string.IsNullOrEmpty(item)==false){
+							singleItem=true;
+							((IDictionary<string, object>)services[client.Service])[client.Topic] = new[] { item };
+						}
                     }
-                    switch (method)
-                    {
-                        case "Request":
-                            result = client.Request(item, format, timeout);
-                            return Encoding.Default.GetString(result);
-                        case "BeginExecute":
-                            await Task.Run(() =>
-                            {
-                                var tcs = new TaskCompletionSource<bool>();
-                                AsyncCallback cb = (ar) => { tcs.SetResult(true); };
-                                client.BeginExecute(command, cb, client);
-                                var r = tcs.Task.Result;
-                            });
-                            break;
-                        case "BeginPoke":
-                            await Task.Run(() =>
-                            {
-                                var tcs = new TaskCompletionSource<bool>();
-                                AsyncCallback cb = (ar) => { tcs.SetResult(true); };
-                                var bytes = Encoding.Default.GetBytes((string)opts["data"] + "\0");
-                                client.BeginPoke(item, bytes, format, cb, client);
-                                var r = tcs.Task.Result;
-                            });
-                            break;
-                        case "BeginRequest":
-                            await Task.Run(() =>
-                            {
-                                var tcs = new TaskCompletionSource<byte[]>();
-                                AsyncCallback cb = (ar) =>
-                                {
-                                    tcs.SetResult(client.EndRequest(ar));
-                                };
-                                client.BeginRequest(item, format, cb, client);
-                                result = tcs.Task.Result;
-                            });
-                            return Encoding.Default.GetString(result);
-                        case "BeginStartAdvise":
-                            await Task.Run(() =>
-                            {
-                                var tcs = new TaskCompletionSource<bool>();
-                                AsyncCallback cb = (ar) => { tcs.SetResult(true); };
-                                client.BeginStartAdvise(item, format, hot, cb, client);
-                                var r = tcs.Task.Result;
-                            });
-                            break;
-                        case "BeginStopAdvise":
-                            await Task.Run(() =>
-                            {
-                                var tcs = new TaskCompletionSource<bool>();
-                                AsyncCallback cb = (ar) => { tcs.SetResult(true); };
-                                client.BeginStopAdvise(item, cb, client);
-                                var r = tcs.Task.Result;
-                            });
-                            break;
-                        case "Service":
-                            return client.Service;
-                        case "Topic":
-                            return client.Topic;
-                        case "Handle":
-                            return client.Handle;
-                        case "IsConnected":
-                            return client.IsConnected;
-                        case "IsPaused":
-                            return client.IsPaused;
-                    }
+					Console.WriteLine(method);
+					switch (method)
+					{
+						case "Request":
+							if(singleItem){
+								result = client.Request(item, format, timeout);
+								return Encoding.Default.GetString(result);
+							}
+							break;
+						case "BeginExecute":
+							await Task.Run(() =>
+							{
+								var tcs = new TaskCompletionSource<bool>();
+								AsyncCallback cb = (ar) => { tcs.SetResult(true); };
+								client.BeginExecute(command, cb, client);
+								var r = tcs.Task.Result;
+							});
+							break;
+						case "BeginPoke":
+							if(singleItem){
+								await Task.Run(() =>
+								{
+									var tcs = new TaskCompletionSource<bool>();
+									AsyncCallback cb = (ar) => { tcs.SetResult(true); };
+									var bytes = Encoding.Default.GetBytes((string)opts["data"] + "\0");
+									client.BeginPoke(item, bytes, format, cb, client);
+									var r = tcs.Task.Result;
+								});
+							}
+							break;
+						case "BeginRequest":
+							if(singleItem){
+								await Task.Run(() =>
+								{
+									var tcs = new TaskCompletionSource<byte[]>();
+									AsyncCallback cb = (ar) =>
+									{
+										tcs.SetResult(client.EndRequest(ar));
+									};
+									client.BeginRequest(item, format, cb, client);
+									result = tcs.Task.Result;
+								});
+								return Encoding.Default.GetString(result);
+							}
+							break;
+						case "BeginStartAdvise":
+							if(singleItem){
+								await Task.Run(() =>
+								{
+									var tcs = new TaskCompletionSource<bool>();
+									AsyncCallback cb = (ar) => { tcs.SetResult(true); };
+									client.BeginStartAdvise(item, format, hot, cb, client);
+									var r = tcs.Task.Result;
+								});
+							}
+							break;
+						case "BeginStopAdvise":
+							if(singleItem){
+								await Task.Run(() =>
+								{
+									var tcs = new TaskCompletionSource<bool>();
+									AsyncCallback cb = (ar) => { tcs.SetResult(true); };
+									client.BeginStopAdvise(item, cb, client);
+									var r = tcs.Task.Result;
+								});
+							}
+							break;
+						case "Service":
+							return client.Service;
+						case "Topic":
+							return client.Topic;
+						case "Handle":
+							return client.Handle;
+						case "IsConnected":
+							return client.IsConnected;
+						case "IsPaused":
+							return client.IsPaused;
+					}
                 }
 
                 if (clients.Count >= 1)
