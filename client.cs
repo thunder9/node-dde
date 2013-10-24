@@ -75,17 +75,20 @@ namespace NodeDde
                     ? (Func<object, Task<object>>)opts["callback"] : (o) => null;
 
                 var results = new List<IDictionary<string, object>>();
+				
+				string item = null;
+				if (opts.ContainsKey("item"))
+				{
+					item = decode((string)opts["item"]);
+				}
 
-                if (clients.Count == 1)
+                if (clients.Count == 1 && item != null) // a single client and only one 'item' is supplied.
                 {
                     var client = clients.First();
+					((IDictionary<string, object>)services[client.Service])[client.Topic] = new[] { item };
+					
                     byte[] result = null;
-                    string item = null;
-                    if (opts.ContainsKey("item"))
-                    {
-                        item = decode((string)opts["item"]);
-                        ((IDictionary<string, object>)services[client.Service])[client.Topic] = new[] { item };
-                    }
+                    
                     switch (method)
                     {
                         case "Request":
@@ -177,9 +180,9 @@ namespace NodeDde
                             {
                                 var topics = (IDictionary<string, object>)services[client.Service];
                                 var items = (object[])topics[client.Topic];
-                                foreach (string item in items)
+                                foreach (string item_ in items)
                                 {
-                                    client.Poke(decode(item), data, timeout);
+                                    client.Poke(decode(item_), data, timeout);
                                 }
                             }
                             break;
@@ -188,13 +191,13 @@ namespace NodeDde
                             {
                                 var topics = (IDictionary<string, object>)services[client.Service];
                                 var items = ((object[])topics[client.Topic]).Select(decode);
-                                foreach (string item in items)
+                                foreach (string item_ in items)
                                 {
-                                    var result = client.Request(item, format, timeout);
+                                    var result = client.Request(item_, format, timeout);
                                     var obj = new Dictionary<string, object>();
                                     obj["service"] = client.Service;
                                     obj["topic"] = client.Topic;
-                                    obj["item"] = item;
+                                    obj["item"] = item_;
                                     obj["result"] = Encoding.Default.GetString(result);
                                     results.Add(obj);
                                 }
@@ -205,9 +208,9 @@ namespace NodeDde
                             {
                                 var topics = (IDictionary<string, object>)services[client.Service];
                                 var items = ((object[])topics[client.Topic]).Select(decode);
-                                foreach (string item in items)
+                                foreach (string item_ in items)
                                 {
-                                    client.StartAdvise(item, format, hot, timeout);
+                                    client.StartAdvise(item_, format, hot, timeout);
                                 }
                             }
                             break;
@@ -216,9 +219,9 @@ namespace NodeDde
                             {
                                 var topics = (IDictionary<string, object>)services[client.Service];
                                 var items = ((object[])topics[client.Topic]).Select(decode);;
-                                foreach (string item in items)
+                                foreach (string item_ in items)
                                 {
-                                    client.StopAdvise(item, timeout);
+                                    client.StopAdvise(item_, timeout);
                                 }
                             }
                             break;
