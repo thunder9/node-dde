@@ -14,7 +14,7 @@ Client.prototype.poke = function(item, data, timeout) {
 
 Client.prototype.request = function(item, format, timeout) {
   this.item = item;
-  Clients.prototype.request.call(this, format, timeout);
+  return Clients.prototype.request.call(this, format, timeout);
 };
 
 Client.prototype.startAdvise = function(item, format, hot, timeout) {
