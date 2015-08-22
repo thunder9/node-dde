@@ -4,7 +4,7 @@
     "name": "thunder9",
     "url": "https://github.com/thunder9"
   },
-  "version": "0.0.1",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/thunder9/node-dde.git"
@@ -12,7 +12,7 @@
   "os": [ "win32" ],
   "license": "MIT",
   "dependencies": {
-    "edge": "*"
+    "edge": "~0.10.1"
   },
   "devDependencies": {
     "timelineplayer": "git://github.com/thunder9/timelineplayer.js.git"
