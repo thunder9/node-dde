@@ -2,12 +2,12 @@ var edge = require('edge');
 
 var getInvoker = edge.func({
   source: __dirname + '/client.cs',
-  references: [ __dirname + '/vendor/NDde.dll', 'System.Web.dll' ],
+  references: [ __dirname + '/vendor/NDde.dll' ],
   typeName: 'NodeDde.Client',
   methodName: 'GetInvoker'
 });
 
-function Clients(services, encoding) {
+function Clients(services) {
   var self = this;
   var opts = {
     services: services,
@@ -20,7 +20,6 @@ function Clients(services, encoding) {
       }
     }
   }
-  if (encoding) opts.encoding = encoding;
   this._invoke = getInvoker(opts, true);
   this.command = this.data = '';
   this.format = 1;
@@ -130,6 +129,6 @@ Clients.prototype.__proto__ = require('events').EventEmitter.prototype;
 
 exports.Clients = Clients;
 
-exports.createClients = function(services, encoding) {
-  return new Clients(services, encoding);
+exports.createClients = function(services) {
+  return new Clients(services);
 };

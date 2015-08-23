@@ -1,10 +1,10 @@
 var Clients = require('./clients.js').Clients;
 
-function Client(service, topic, encoding) {
+function Client(service, topic) {
   var services = {};
   services[service] = {};
   services[service][topic] = null;
-  Clients.call(this, services, encoding);
+  Clients.call(this, services);
 }
 
 Client.prototype.poke = function(item, data, timeout) {
@@ -69,6 +69,6 @@ Client.prototype.beginStopAdvise = function(item, oncomplete) {
 
 Client.prototype.__proto__ = Clients.prototype;
 
-exports.createClient = function(service, topic, encoding) {
-  return new Client(service, topic, encoding);
+exports.createClient = function(service, topic) {
+  return new Client(service, topic);
 };
