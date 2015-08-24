@@ -5,16 +5,10 @@ Node-dde is a simplified regacy win32 Dynamic Data Exchange (DDE) wrapper for no
 
 # Installation
 
-Add this line to `dependencies` or `devDependencies` in your package.json:
-
-```javascript
-"node-dde": "git://github.com/thunder9/node-dde.git"
-```
-
-Next, run the following:
+Run the following in your project folder:
 
 ```
-npm install
+npm install node-dde
 ```
 
 # Example
