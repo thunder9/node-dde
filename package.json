@@ -14,7 +14,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "edge": "github:tjanczuk/edge"
+    "edge": "~5.0.0"
   },
   "devDependencies": {
     "timelineplayer": "git://github.com/thunder9/timelineplayer.js.git"
