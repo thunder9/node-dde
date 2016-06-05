@@ -9,10 +9,12 @@
     "type": "git",
     "url": "git://github.com/thunder9/node-dde.git"
   },
-  "os": [ "win32" ],
+  "os": [
+    "win32"
+  ],
   "license": "MIT",
   "dependencies": {
-    "edge": "~0.10.1"
+    "edge": "~5.0.0"
   },
   "devDependencies": {
     "timelineplayer": "git://github.com/thunder9/timelineplayer.js.git"
